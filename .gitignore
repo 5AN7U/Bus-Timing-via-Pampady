@@ -1,24 +1,115 @@
-# Compiled class file
-*.class
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Timings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
 
-# Log file
-*.log
+    <h2>Select Your Bus Route</h2>
+    <select id="routeDropdown" onchange="showBusDetails()">
+        <option value="">-- Select a Route --</option>
+    </select>
 
-# BlueJ files
-*.ctxt
+    <div id="busDetails"></div>
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+    <script>
+        // Sample bus data
+        const busData = {
+            "City Center → Airport": [
+                { busID: "B101", departure: "08:00 AM", arrival: "08:45 AM", busType: "AC", fare: "$5" },
+                { busID: "B102", departure: "10:00 AM", arrival: "10:45 AM", busType: "Non-AC", fare: "$3" }
+            ],
+            "Downtown → University": [
+                { busID: "B201", departure: "09:00 AM", arrival: "09:40 AM", busType: "AC", fare: "$4" },
+                { busID: "B202", departure: "11:00 AM", arrival: "11:50 AM", busType: "Non-AC", fare: "$2" }
+            ],
+            "Station → Mall": [
+                { busID: "B301", departure: "07:30 AM", arrival: "08:15 AM", busType: "AC", fare: "$6" },
+                { busID: "B302", departure: "12:00 PM", arrival: "12:45 PM", busType: "Non-AC", fare: "$4" }
+            ]
+        };
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+        // Function to populate dropdown with routes
+        function populateDropdown() {
+            const dropdown = document.getElementById("routeDropdown");
+            for (let route in busData) {
+                let option = document.createElement("option");
+                option.value = route;
+                option.textContent = route;
+                dropdown.appendChild(option);
+            }
+        }
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+        // Function to show bus details when a route is selected
+        function showBusDetails() {
+            const selectedRoute = document.getElementById("routeDropdown").value;
+            const detailsDiv = document.getElementById("busDetails");
+
+            if (!selectedRoute) {
+                detailsDiv.innerHTML = "";
+                return;
+            }
+
+            let tableHtml = `
+                <h3>Bus Timings for ${selectedRoute}</h3>
+                <table>
+                    <tr>
+                        <th>Bus ID</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Bus Type</th>
+                        <th>Fare</th>
+                    </tr>
+            `;
+
+            busData[selectedRoute].forEach(bus => {
+                tableHtml += `
+                    <tr>
+                        <td>${bus.busID}</td>
+                        <td>${bus.departure}</td>
+                        <td>${bus.arrival}</td>
+                        <td>${bus.busType}</td>
+                        <td>${bus.fare}</td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += `</table>`;
+            detailsDiv.innerHTML = tableHtml;
+        }
+
+        // Call function to populate dropdown on page load
+        window.onload = populateDropdown;
+    </script>
+
+</body>
+</html>
